@@ -1,0 +1,14 @@
+version: '3'
+services:
+    app:
+        # place your image name here
+        image: your-image:dev
+        volumes:
+            - ./:/usr/src/app
+            - /usr/src/app/node_modules/
+            - /usr/src/app/.next/
+            - .next/cache/images:/usr/src/app/.next/cache/images
+        environment:
+            - PORT=${PORT}
+        ports:
+            - '${PORT}:${PORT}'
