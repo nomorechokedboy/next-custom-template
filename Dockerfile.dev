@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:14-alpine AS BUILD_IMAGE
 
 RUN mkdir -p /usr/src/app
 
@@ -6,9 +6,18 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock /usr/src/app/
 
-RUN yarn
+RUN yarn --frozen-lockfile
 
-COPY . /usr/src/app
+COPY . .
+
+FROM node:14-alpine
+
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
+
+COPY --from=BUILD_IMAGE /usr/src/app ./
+COPY --from=BUILD_IMAGE /usr/src/app/node_modules ./node_modules
 
 CMD ["yarn", "dev"]
 
